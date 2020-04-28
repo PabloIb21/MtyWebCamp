@@ -1,2 +1,4 @@
 # MtyWebCamp
-It's my biggest project in which I used many libraries, plugins and other technologies.
+It's my biggest project in which I used many libraries, plugins and other technologies. This is a website from a web design conference.
+It has a section to show all events dynamically from the database, a section of the guests of each event also shown from the database, a section to make reservations in which the user buys their tickets for the conference and You can also buy other referring items, the payment method is Paypal. It has a map to see the location of the conference, a registration to the website newsletter, a dynamic record of the time remaining for the start of the conference.
+It has a website administration area where it can only be accessed through a login, it contains a summary of records and a graph on the dashboard. It has a section to see the events, in which you can update and delete, the same for the category of events, guests, registrants, administrators and testimonials.
