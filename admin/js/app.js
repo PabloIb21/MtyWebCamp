@@ -32,7 +32,7 @@ $(document).ready(function () {
             $('#resultado_password').text('Correcto');
             $('#resultado_password').parents('.form-group').addClass('has-success').removeClass('has-error');
             $('input#password').parents('.form-group').addClass('has-success').removeClass('has-error');
-            $('#crear_registro').attr('disabled', false);
+            $('#crear_registro_admin').attr('disabled', false);
         }else{
             $('#resultado_password').text('No son iguales');
             $('#resultado_password').parents('.form-group').addClass('has-error').removeClass('has-success');
@@ -61,4 +61,18 @@ $(document).ready(function () {
         checkboxClass: 'icheckbox_flat-blue',
         radioClass   : 'iradio_flat-blue'
     });
+
+    $.getJSON('servicio-registrados.php', function(data){
+        var line = new Morris.Line({
+            element: 'grafica-registros',
+            resize: true,
+            data: data,
+            xkey: 'fecha',
+            ykeys: ['cantidad'],
+            labels: ['Item 1'],
+            lineColors: ['#3c8dbc'],
+            hideHover: 'auto'
+        });
+    });
+    
 });

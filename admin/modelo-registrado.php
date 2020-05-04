@@ -3,16 +3,30 @@
 error_reporting(E_ALL ^ E_NOTICE);
 include_once 'funciones/funciones.php';
 
-$nombre_categoria = $_POST['nombre_categoria'];
-$icono = $_POST['icono'];
+$nombre = $_POST['nombre'];
+$apellido = $_POST['apellido'];
+$email = $_POST['email'];
+//boletos
+$boletos_adquiridos = $_POST['boletos'];
+//camisas y etiquetas
+$camisas = $_POST['pedido_extra']['camisas']['cantidad'];
+$etiquetas = $_POST['pedido_extra']['etiquetas']['cantidad'];
 
+$pedido = productos_json($boletos_adquiridos, $camisas, $etiquetas);
+
+$total = $_POST['total_pedido'];
+$regalo = $_POST['regalo'];
+
+$eventos = $_POST['registro_evento'];
+$registro_eventos = eventos_json($eventos);
+
+$fecha_registro = $_POST['fecha_registro'];
 $id_registro = $_POST['id_registro'];
 
 if($_POST['registro'] == 'nuevo'){
-    
     try {
-        $stmt = $conn->prepare(" INSERT INTO categoria_evento (cat_evento, icono) VALUES ( ?, ?) ");
-        $stmt->bind_param('ss', $nombre_categoria, $icono);
+        $stmt = $conn->prepare('INSERT INTO registrados (nombre_registrado, apellido_registrado, email_registrado, fecha_registro, pases_articulos, talleres_registrados, regalo, total_pagado, pagado) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, 1) ');
+        $stmt->bind_param('sssssis', $nombre, $apellido, $email, $pedido, $registro_eventos, $regalo, $total);
         $stmt->execute();
         if($stmt->affected_rows > 0){
             $respuesta = array(
@@ -36,10 +50,9 @@ if($_POST['registro'] == 'nuevo'){
 }
 
 if($_POST['registro'] == 'actualizar'){
-
     try {
-        $stmt = $conn->prepare('UPDATE categoria_evento SET cat_evento = ?, icono = ?, editado = NOW() WHERE id_categoria = ? ');
-        $stmt->bind_param('ssi', $nombre_categoria, $icono, $id_registro);
+        $stmt = $conn->prepare('UPDATE registrados SET nombre_registrado = ?, apellido_registrado = ?, email_registrado = ?, fecha_registro = ?, pases_articulos = ?, talleres_registrados = ?, regalo = ?, total_pagado = ?, pagado = 1 WHERE ID_registrado = ? ');
+        $stmt->bind_param('ssssssisi', $nombre, $apellido, $email, $fecha_registro, $pedido, $registro_eventos, $regalo, $total, $id_registro);
         $stmt->execute();
         if($stmt->affected_rows > 0){
             $respuesta = array(
@@ -66,7 +79,7 @@ if($_POST['registro'] == 'eliminar'){
     $id_borrar = $_POST['id'];
 
     try {
-        $stmt = $conn->prepare('DELETE FROM categoria_evento WHERE id_categoria = ? ');
+        $stmt = $conn->prepare('DELETE FROM registrados WHERE ID_registrado = ? ');
         $stmt->bind_param('i', $id_borrar);
         $stmt->execute();
         if($stmt->affected_rows > 0){

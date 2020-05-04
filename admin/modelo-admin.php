@@ -9,7 +9,6 @@ $password = $_POST['password'];
 $id_registro = $_POST['id_registro'];
 
 if($_POST['registro'] == 'nuevo'){
-
     $opciones = array(
         'cost' => 12
     );
@@ -60,7 +59,7 @@ if($_POST['registro'] == 'actualizar'){
         if($stmt->affected_rows > 0){
             $respuesta = array(
                 'respuesta' => 'exito',
-                'id_actualizado' => $stmt->insert_id
+                'id_actualizado' => $id_registro
             );
         }else{
             $respuesta = array(

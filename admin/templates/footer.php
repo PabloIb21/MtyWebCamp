@@ -34,6 +34,8 @@
 <script src="js/bootstrap-timepicker.min.js"></script>
 <script src="js/select2.full.min.js"></script>
 <script src="iCheck/icheck.min.js"></script>
+<script src="js/morris.min.js"></script>
+<script src="js/raphael.min.js"></script>
 <script src="js/fontawesome-iconpicker.min.js"></script>
 <script src="js/admin-ajax.js"></script>
 <script src="js/login-ajax.js"></script>

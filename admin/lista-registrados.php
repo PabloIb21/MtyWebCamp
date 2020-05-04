@@ -75,7 +75,11 @@
                                             'etiquetas' => 'Etiquetas'
                                         );
                                         foreach($articulos as $llave => $articulo) {
-                                            echo $articulo . " " . $arreglo_articulos[$llave] . "<br>";
+                                            if(is_array($articulo) && array_key_exists('cantidad', $articulo)){
+                                              echo $articulo['cantidad'] . " " . $arreglo_articulos[$llave] . "<br>";
+                                            }else{
+                                              echo $articulo . " " . $arreglo_articulos[$llave] . "<br>";
+                                            }
                                         }
                                     ?>
                                 </td>
@@ -85,7 +89,7 @@
                                         $talleres = json_decode($eventos_resultado, true);
 
                                         $talleres = implode("','", $talleres['eventos']);
-                                        $sql_talleres = "SELECT nombre_evento, fecha_evento, hora_evento FROM eventos WHERE clave IN ('$talleres')";
+                                        $sql_talleres = "SELECT nombre_evento, fecha_evento, hora_evento FROM eventos WHERE clave IN ('$talleres') OR id_evento IN ('$talleres')";
 
                                         $resultado_talleres = $conn->query($sql_talleres);
                                         while($eventos = $resultado_talleres->fetch_assoc()){

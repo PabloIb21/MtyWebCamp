@@ -1,6 +1,10 @@
 <?php
   error_reporting(E_ALL ^ E_NOTICE);
 
+  $id = $_GET['id'];
+  if(!filter_var($id, FILTER_VALIDATE_INT)){
+      die("Error");
+  }
   include_once 'funciones/sesiones.php';
   include_once 'templates/header.php';
   include_once 'funciones/funciones.php';
@@ -13,8 +17,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Crear registro de usuario manual
-            <small>llena el formulario para crear un usuario registrado</small>
+            Editar registro de usuario manual
+            <small>llena el formulario para editar un usuario registrado</small>
         </h1>
     </section>
 
@@ -29,24 +33,35 @@
                         <h3 class="box-title">Crear registro</h3>
                     </div>
                     <div class="box-body">
+                        <?php
+                            $sql = "SELECT * FROM registrados WHERE ID_registrado = $id ";
+                            $resultado = $conn->query($sql);
+                            $registrado = $resultado->fetch_assoc();
+                        ?>
                         <!-- form start -->
-                        <form role="form" id="guardar-registro" name="guardar-registro" method="post" action="modelo-registrado.php">
+                        <form class="editar-registrado" role="form" id="guardar-registro" name="guardar-registro" method="post" action="modelo-registrado.php">
                             <div class="box-body">
                                 <div class="form-group">
                                     <label for="nombre">Nombre:</label>
                                     <input type="text" class="form-control" id="nombre" 
-                                       name="nombre" placeholder="Nombre">
+                                       name="nombre" placeholder="Nombre" value="<?php echo $registrado['nombre_registrado']; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="apellido">Apellido:</label>
                                     <input type="text" class="form-control" id="apellido" 
-                                       name="apellido" placeholder="Apellido">
+                                       name="apellido" placeholder="Apellido" value="<?php echo $registrado['apellido_registrado']; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
                                     <input type="email" class="form-control" id="email" 
-                                       name="email" placeholder="Email">
+                                       name="email" placeholder="Email" value="<?php echo $registrado['email_registrado']; ?>">
                                 </div>
+
+                                <?php
+                                    $pedido = $registrado['pases_articulos'];
+                                    $boletos = json_decode($pedido , true);
+                                ?>
+
                                 <div class="form-group">
                                 <div id="paquetes" class="paquetes">
                                 <div class="box-header width-border">
@@ -64,7 +79,7 @@
                                             </ul>
                                             <div class="orden">
                                                 <label for="pase_dia">Boletos deseados:</label>
-                                                <input type="number" min="0" name="boletos[un_dia][cantidad]" id="pase_dia" size="3" placeholder="0" class="form-control">
+                                                <input type="number" min="0" name="boletos[un_dia][cantidad]" id="pase_dia" size="3" placeholder="0" class="form-control" value="<?php echo $boletos['un_dia']['cantidad']; ?>">
                                                 <input type="hidden" value="30" name="boletos[un_dia][precio]">
                                             </div>
                                         </li>
@@ -79,7 +94,7 @@
                                             </ul>
                                             <div class="orden">
                                                 <label for="pase_completo">Boletos deseados:</label>
-                                                <input type="number" min="0" name="boletos[completo][cantidad]" id="pase_completo" size="3" placeholder="0" class="form-control">
+                                                <input type="number" min="0" name="boletos[completo][cantidad]" id="pase_completo" size="3" placeholder="0" class="form-control" value="<?php echo $boletos['pase_completo']['cantidad']; ?>">
                                                 <input type="hidden" value="50" name="boletos[completo][precio]">
                                             </div>
                                         </div>
@@ -95,7 +110,7 @@
                                             </ul>
                                             <div class="orden">
                                                 <label for="pase_dosdias">Boletos deseados:</label>
-                                                <input type="number" min="0" name="boletos[dos_dias][cantidad]" id="pase_dosdias" size="3" placeholder="0" class="form-control">
+                                                <input type="number" min="0" name="boletos[dos_dias][cantidad]" id="pase_dosdias" size="3" placeholder="0" class="form-control" value="<?php echo $boletos['pase_2dias']['cantidad']; ?>">
                                                 <input type="hidden" value="30" name="boletos[dos_dias][precio]">
                                             </div>
                                         </div>
@@ -109,6 +124,10 @@
                                     </div>
                                         <div id="eventos" class="eventos clearfix">
                                         <div class="caja">
+                                            <?php
+                                                $eventos = $registrado['talleres_registrados'];
+                                                $id_eventos_registrados = json_decode($eventos, true);
+                                            ?>
                                             <?php
                                                 try {
                                                     $sql = "SELECT eventos.*, categoria_evento.cat_evento, invitados.nombre_invitado, invitados.apellido_invitado ";
@@ -155,7 +174,7 @@
 
                                                         <?php foreach($evento_dia as $evento){ ?>
                                                         <label>
-                                                            <input type="checkbox" class="minimal" name="registro_evento[]" id="<?php echo $evento['id'];?>" value="<?php echo $evento['id'];?>"><time><?php echo $evento['hora'];?></time> <?php echo $evento['nombre_evento'];?>
+                                                            <input <?php echo (in_array($evento['id'], $id_eventos_registrados['eventos']) ? 'checked' : ''); ?> type="checkbox" class="minimal" name="registro_evento[]" id="<?php echo $evento['id'];?>" value="<?php echo $evento['id'];?>"><time><?php echo $evento['hora'];?></time> <?php echo $evento['nombre_evento'];?>
                                                             <br>
                                                             <span class="autor"><?php echo $evento['nombre_invitado'] . " " . $evento['apellido_invitado']; ?></span>
                                                         </label>
@@ -175,21 +194,21 @@
                                             <div class="extras col-md-6">
                                                 <div class="orden">
                                                     <label for="camisa_evento">Camisa del evento $10 <small>(promoción 7$ dto.)</small></label>
-                                                    <input type="number" name="pedido_extra[camisas][cantidad]" id="camisa_evento" min="0" size="3" placeholder="0" class="form-control">
+                                                    <input value="<?php echo $boletos['camisas']; ?>" type="number" name="pedido_extra[camisas][cantidad]" id="camisa_evento" min="0" size="3" placeholder="0" class="form-control">
                                                     <input type="hidden" value="10" name="pedido_extra[camisas][precio]">
                                                 </div> <!-- .orden -->
                                                 <div class="orden">
                                                     <label for="etiquetas">Paquete de 10 etiquetas $2 <small>(HTML5, CSS3, JavaScript)</small></label>
-                                                    <input type="number" name="pedido_extra[etiquetas][cantidad]" id="etiquetas" min="0" size="3" placeholder="0" class="form-control">
+                                                    <input value="<?php echo $boletos['etiquetas']; ?>" type="number" name="pedido_extra[etiquetas][cantidad]" id="etiquetas" min="0" size="3" placeholder="0" class="form-control">
                                                     <input type="hidden" value="2" name="pedido_extra[etiquetas][precio]">
                                                 </div> <!-- .orden -->
                                                 <div class="orden">
                                                     <label for="regalo">Seleccione un regalo</label> <br>
                                                     <select name="regalo" id="regalo" required class="form-control seleccionar">
                                                         <option value="">- Seleccione un regalo --</option>
-                                                        <option value="2">Etiquetas</option>
-                                                        <option value="1">Pulsera</option>
-                                                        <option value="3">Plumas</option>
+                                                        <option value="2" <?php echo ($registrado['regalo'] == 2) ? 'selected' : ''; ?> >Etiquetas</option>
+                                                        <option value="1" <?php echo ($registrado['regalo'] == 1) ? 'selected' : ''; ?> >Pulsera</option>
+                                                        <option value="3" <?php echo ($registrado['regalo'] == 3) ? 'selected' : ''; ?> >Plumas</option>
                                                     </select>
                                                 </div> <!-- .orden -->
 
@@ -201,12 +220,11 @@
                                                 <div id="lista-productos">
 
                                                 </div>
+                                                <p>Total Ya Pagado: <?php echo $registrado['total_pagado']; ?></p>
                                                 <p>Total:</p>
                                                 <div id="suma-total">
 
                                                 </div>
-                                                <input type="hidden" name="total_pedido" id="total_pedido">
-                                                <input type="hidden" name="total_descuento" id="total_descuento" value="total_descuento">
                                             </div> <!-- .total -->
                                         </div> <!-- .caja -->
                                     </div> <!-- #resumen -->
@@ -215,8 +233,12 @@
                             <!-- /.box-body -->
 
                             <div class="box-footer">
-                              <input type="hidden" name="registro" value="nuevo">
-                                <button type="submit" class="btn btn-primary" id="btnRegistro">Añadir</button>
+                              <input type="hidden" name="total_pedido" id="total_pedido">
+                              <input type="hidden" name="total_descuento" id="total_descuento" value="total_descuento">
+                              <input type="hidden" name="registro" value="actualizar">
+                              <input type="hidden" name="id_registro" value="<?php echo $registrado['ID_registrado']; ?>">
+                              <input type="hidden" name="fecha_registro" value="<?php echo $registrado['fecha_registro']; ?>">
+                              <button type="submit" class="btn btn-primary" id="btnRegistro">Guardar</button>
                             </div>
                         </form>
                     </div>

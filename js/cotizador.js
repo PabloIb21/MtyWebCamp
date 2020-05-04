@@ -52,7 +52,14 @@
             apellido.addEventListener('blur', validarCampos);
             email.addEventListener('blur', validarCampos);
             email.addEventListener('blur', validarMail);
-        
+
+            var formulario_editar = document.getElementsByClassName('editar-registrado');
+            if(formulario_editar.length > 0){
+                if(pase_dia.value || pase_dosdias.value || pase_completo.value) {
+                    mostrarDias();
+                }
+            }
+            
         function validarCampos(){
             if(this.value == ''){
                 errorDiv.style.display = 'block';

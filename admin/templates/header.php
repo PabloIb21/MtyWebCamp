@@ -17,6 +17,7 @@
   <link rel="stylesheet" type="text/css" href="css/select2.min.css"/>
   <link rel="stylesheet" type="text/css" href="css/fontawesome-iconpicker.min.css"/>
   <link rel="stylesheet" type="text/css" href="iCheck/icheck.css"/>
+  <link rel="stylesheet" type="text/css" href="css/morris.css"/>
   <!-- Theme style -->
   <link rel="stylesheet" href="css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins

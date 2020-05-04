@@ -6,11 +6,7 @@
         </div>
         <div class="ultimos-tweets">
           <h3>Últimos <span>tweets</span></h3>
-          <ul>
-            <li>Aenean sollicitudin leo vitae diam luctus semper. Nulla eu urna vestibulum, ullamcorper dui eget, dictum leo. Quisque commodo mi in tortor rutrum, ut malesuada magna dignissim.</li>
-            <li>Aenean sollicitudin leo vitae diam luctus semper. Nulla eu urna vestibulum, ullamcorper dui eget, dictum leo. Quisque commodo mi in tortor rutrum, ut malesuada magna dignissim.</li>
-            <li>Aenean sollicitudin leo vitae diam luctus semper. Nulla eu urna vestibulum, ullamcorper dui eget, dictum leo. Quisque commodo mi in tortor rutrum, ut malesuada magna dignissim.</li>
-          </ul>
+          <a class="twitter-timeline" data-height="400" data-theme="light" href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw">Tweets by TwitterDev</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div>
         <div class="menu">
           <h3>Redes <span>sociales</span></h3>
